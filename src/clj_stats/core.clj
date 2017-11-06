@@ -32,9 +32,13 @@
 (defn square [x]
       (* x x))
 
-
 (defn list_variance [xs]
       (assert (not (empty? xs)) "list is empty")
       (letfn [(sum_squares [xs mean] (list_foldleft 0 xs (fn [x y] (+ x (square (- y mean))))))]
       (/ (sum_squares xs (list_mean xs)) (list_length xs))
       ))
+
+(defn list_foldleft2 [res xs ys f]
+      (assert (= (list_length xs) (list_length ys)) "lists should be of same length")
+      (if (and (empty? xs) (empty? ys)) res (list_foldleft2 (f res (first xs) (first ys)) (rest xs) (rest ys) f))
+      )
