@@ -1,4 +1,5 @@
-(ns clj_stats.core)
+(ns clj_stats.core
+    (:require [clojure.java.io :as io]))
 
 (defn list_reverse [xs]
       (letfn [(helper [xs res] (if (empty? xs) res (helper (rest xs) (conj res (first xs)))))]
@@ -9,6 +10,17 @@
       (if (empty? xs) res (list_foldleft (f res (first xs)) (rest xs) f)
       ))
 
+(defn lazy_repeat [x f]
+      (lazy-seq (cons x (lazy_repeat (f x) f)))
+      )
+
+(defn fun_power [x n]
+      (list_foldleft 1 (take n (lazy_repeat x #(* % 1))) *)
+      )
+
+(defn square [x]
+      (fun_power x 2)
+      )
 
 (defn list_foldright [res xs f]
       (list_foldleft 0 (list_reverse xs) f)
@@ -29,9 +41,6 @@
       (/ (list_foldleft 0 xs +) (list_length xs))
       )
 
-(defn square [x]
-      (* x x))
-
 (defn list_variance [xs]
       (assert (not (empty? xs)) "list is empty")
       (letfn [(sum_squares [xs mean] (list_foldleft 0 xs (fn [x y] (+ x (square (- y mean))))))]
@@ -41,4 +50,48 @@
 (defn list_foldleft2 [res xs ys f]
       (assert (= (list_length xs) (list_length ys)) "lists should be of same length")
       (if (and (empty? xs) (empty? ys)) res (list_foldleft2 (f res (first xs) (first ys)) (rest xs) (rest ys) f))
+      )
+
+(defn list_sse [xs ys]
+      (list_foldleft2 0 xs ys (fn [res x y] (+ res (square (- x y)))))
+      )
+
+(defn cube [x]
+      (fun_power x 3)
+      )
+
+(defn fact [n]
+      (letfn [(helper [n res]
+      	     (if (<= n 1) res (helper (- n 1) (* res n)))
+	     )]
+	     (helper n 1)
+	     ))
+
+(defn streamize [xs]
+      (lazy-seq (cons (first xs) (streamize (rest xs))))
+      )
+
+(defn lazy_leftroll [res xs f]
+      (lazy-seq (cons (f res (first xs)) (lazy_leftroll (f res (first xs)) (rest xs) f)))
+      )
+
+(defn lazy_leftroll2 [res xs ys f]
+      (lazy-seq (cons (f res (first xs) (first ys)) (lazy_leftroll2 (f res (first xs) (first ys)) (rest xs) (rest ys) f)))
+      )
+
+(defn lazy_map2 [xs ys f]
+      (lazy-seq (cons (f (first xs) (first ys)) (lazy_map2 (rest xs) (rest ys) f)))
+      )
+
+(defn lazy_rolling_sum [xs]
+      (lazy_leftroll 0 xs +)
+      )
+
+(defn lazy_rolling_length [xs]
+      (letfn [(helper [xs res] (lazy-seq (cons (+ res 1) (helper (rest xs) (+ res 1)))))]
+      (helper xs 0))
+      )
+
+(defn lazy_rolling_mean [xs]
+      (lazy_map2 (lazy_rolling_sum xs) (lazy_rolling_length xs) /)
       )
