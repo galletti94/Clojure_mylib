@@ -47,6 +47,13 @@
       (/ (sum_squares xs (list_mean xs)) (list_length xs))
       ))
 
+(defn list_equal [xs ys]
+      (assert (= (list_length xs) (list_length ys)))
+      (if (and (empty? xs) (empty? ys)) true
+      (if (not (= (first xs) (first ys))) false (list_equal (rest xs) (rest ys)))
+      ))
+
+
 (defn list_foldleft2 [res xs ys f]
       (assert (= (list_length xs) (list_length ys)) "lists should be of same length")
       (if (and (empty? xs) (empty? ys)) res (list_foldleft2 (f res (first xs) (first ys)) (rest xs) (rest ys) f))
@@ -95,3 +102,12 @@
 (defn lazy_rolling_mean [xs]
       (lazy_map2 (lazy_rolling_sum xs) (lazy_rolling_length xs) /)
       )
+
+(defn lazy_merge [xs ys]
+      (if (empty? xs) (if (empty? ys) nil ys) (if (empty? ys) xs
+      (if (< (first xs) (first ys))
+      	  (lazy-seq (cons (first xs) (lazy_merge (rest xs) ys)))
+      	  (lazy-seq (cons (first ys) (lazy_merge xs (rest ys))))
+      	  ))))
+
+

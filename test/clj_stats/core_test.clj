@@ -28,3 +28,8 @@
 	 (testing "lasy_leftroll failed"
 	 (is (= (nth (lazy_rolling_mean test_var) (- (list_length test_var) 1)) (list_mean test_var))
 	 )))
+
+(deftest merge
+      (testing "lazy_merge failed"
+      (is (list_equal (take 10 (lazy_merge test_var test_var)) '(1 1 2 2 3 3 4 4 5 5))
+      )))
