@@ -33,3 +33,8 @@
       (testing "lazy_merge failed"
       (is (list_equal (take 10 (lazy_merge test_var test_var)) '(1 1 2 2 3 3 4 4 5 5))
       )))
+
+(deftest splitting
+	 (testing "lazy_split failed"
+	 (is (list_equal (take 1 (lazy_split test_var)) (list (list 1 2)) ))
+	 ))

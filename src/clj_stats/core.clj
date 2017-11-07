@@ -110,4 +110,8 @@
       	  (lazy-seq (cons (first ys) (lazy_merge xs (rest ys))))
       	  ))))
 
+(defn lazy_split [xs]
+      (if (empty? xs) nil (if (empty? (rest xs)) (list (list (first xs))) (lazy-seq (cons (list (first xs) (second xs)) (lazy_split (rest (rest xs)))))))
+      )
+
 
