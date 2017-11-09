@@ -114,4 +114,15 @@
       (if (empty? xs) nil (if (empty? (rest xs)) (list (list (first xs))) (lazy-seq (cons (list (first xs) (second xs)) (lazy_split (rest (rest xs)))))))
       )
 
+(defn lazy_mergesort [xs]
+      (if (empty? (drop 2 xs)) xs
+      (lazy_merge (lazy_split xs) (lazy_split (drop 2 xs))))
+      )
 
+(defn theNats [init]
+      (lazy-seq (cons (+ init 1) (theNats (+ init 1))))
+      )
+
+(defn sieve [nats]
+      (lazy-seq (cons (first nats) (filter (fn [x] (> (mod x (first nats)) 0)) (rest nats)))
+      ))

@@ -38,3 +38,15 @@
 	 (testing "lazy_split failed"
 	 (is (list_equal (take 1 (lazy_split test_var)) (list (list 1 2)) ))
 	 ))
+
+
+(deftest nats
+	 (testing "theNats failed"
+	 (is (list_equal (take 10 (theNats 0)) test_var))
+	 ))
+
+
+(deftest primes
+	 (testing "Sieve failed"
+	 (is (list_equal (take 20 (sieve (theNats 1))) '(2 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39)))
+	 ))
