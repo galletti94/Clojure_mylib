@@ -22,6 +22,11 @@
       (fun_power x 2)
       )
 
+(defn cube [x]
+      (fun_power x 3)
+      )
+
+
 (defn list_foldright [res xs f]
       (list_foldleft 0 (list_reverse xs) f)
       )
@@ -126,3 +131,24 @@
 (defn sieve [nats]
       (lazy-seq (cons (first nats) (filter (fn [x] (> (mod x (first nats)) 0)) (rest nats)))
       ))
+
+;; enumerate all pairs of Nats ordered by their sum
+
+(defn diagonal [n]
+      (letfn [(helper [i]
+      	     (if (<= i n) (lazy-seq (cons (list i (- n i)) (helper (+ i 1))))
+	     	 '()))]
+		 (helper 0))
+		 )
+
+(defn diagonals [n]
+      (lazy-seq (concat (diagonal n) (diagonals (+ n 1))))
+      )
+
+(def theNatsPairs (lazy-seq (concat (diagonals 0))))
+
+;; some prep for ramanujan number search
+
+(def theNatsPairsRmDup (filter (fn [x] (<= (first x) (second x))) theNatsPairs))
+
+(def SumCubes (map (fn [x] (+ (cube (first x)) (cube (second x)))) theNatsPairsRmDup))

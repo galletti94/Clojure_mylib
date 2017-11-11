@@ -50,3 +50,8 @@
 	 (testing "Sieve failed"
 	 (is (list_equal (take 20 (sieve (theNats 1))) '(2 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39)))
 	 ))
+
+(deftest cubeSum
+	 (testing "Cube Sum failed"
+	 (is (list_equal (take 10 SumCubes) '(0 1 8 2 27 9 64 28 16 125)))
+	 ))
