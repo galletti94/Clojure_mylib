@@ -147,6 +147,23 @@
 
 (def theNatsPairs (lazy-seq (concat (diagonals 0))))
 
+;; enumerate all triples of Nats ordered by sum
+
+(defn triangular [n]
+      (letfn [(helper [i j]
+      	     (if (< (+ i j) n) (lazy-seq (cons (list i j (- n (+ i j))) (helper (+ i 1) j)))
+	     (if (<= j n) (lazy-seq (cons (list i j (- n (+ i j))) (helper 0 (+ 1 j))))
+	     '())))]
+	     (helper 0 0)
+	     ))
+
+(defn triangulars [n]
+      (lazy-seq (concat (triangular n) (triangulars (+ n 1))))
+      )
+
+
+(def theNatsTriples (lazy-seq (concat (triangulars 0))))
+
 ;; some prep for ramanujan number search
 
 (def theNatsPairsRmDup (filter (fn [x] (<= (first x) (second x))) theNatsPairs))
