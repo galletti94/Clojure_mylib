@@ -196,3 +196,11 @@
   
 (defn nextPerm [xs] (let [pivot (+ 1 (findPivot xs))]
                          (permutate xs pivot)))
+
+
+(defn combine [xs ys res]
+    (if (empty? ys) res (concat (combine (cons (first ys) xs) (rest ys) '()) (combine xs (rest ys) (cons (cons (first ys) xs) res)) )))
+
+(defn getsubsets [xs]
+    (if (empty? xs)
+    (lazy-seq (concat (combine (take 1 xs) (rest xs) '()) (getsubsets (rest xs))))))
