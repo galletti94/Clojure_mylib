@@ -169,3 +169,30 @@
 (def theNatsPairsRmDup (filter (fn [x] (<= (first x) (second x))) theNatsPairs))
 
 (def SumCubes (map (fn [x] (+ (cube (first x)) (cube (second x)))) theNatsPairsRmDup))
+
+(defn swap [xs i j]
+    (concat 
+          (concat 
+                (concat 
+                      (concat (take (- i 1) xs) (take 1 (drop (- j 1) xs))) 
+                      (take (- (- j i) 1) (drop i xs)))
+                      (take 1 (drop (- i 1) xs)))
+                      (drop j xs))
+)
+
+(defn permutate [xs pivot]
+    (if (< pivot (list_length xs))
+    (if (< (nth xs (- pivot 1)) (nth xs (+ pivot 1)))
+      (let [xss (swap xs (- pivot 1) (+ pivot 1))] (concat (take pivot xss) (list_reverse (drop pivot xss))))
+      (let [yss (swap xs (- pivot 1) pivot)] (concat (take pivot yss) (list_reverse (drop pivot yss))))
+    )
+    (swap xs (- pivot 1) pivot)
+    ))
+
+(defn findPivot [xs]
+    (letfn [(helper [xs i] (if (= i 0) i (if (> (nth xs i) (nth xs (- i 1))) i (helper xs (- i 1)))))]
+           (helper xs (- (list_length xs) 1)))
+)
+  
+(defn nextPerm [xs] (let [pivot (+ 1 (findPivot xs))]
+                         (permutate xs pivot)))
