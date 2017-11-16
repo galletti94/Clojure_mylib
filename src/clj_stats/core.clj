@@ -1,6 +1,32 @@
 (ns clj_stats.core
     (:require [clojure.java.io :as io]))
 
+
+;; functions on integers ;;
+
+(defn fact [n]
+      (letfn [(helper [n res]
+      	     (if (<= n 1) res (helper (- n 1) (* res n)))
+	     )]
+	     (helper n 1)
+	     ))
+
+(defn fib [n]
+      (letfn [(helper [n nex curr]
+      	     (if (= n 0) curr (helper (- n 1) (+ curr nex) nex)))]
+	     (helper n 1 0)
+	     ))
+
+(defn acker [x y]
+      (if (= x 0) (+ y 1)
+      	  (if (= y 0) (acker (- x 1) 1)
+	      (acker (- x 1) (acker x (- y 1)))
+	      )))
+
+
+
+;; functions on lists ;;
+
 (defn list_reverse [xs]
       (letfn [(helper [xs res] (if (empty? xs) res (helper (rest xs) (conj res (first xs)))))]
       	     (helper xs nil)
@@ -14,6 +40,7 @@
       (lazy-seq (cons x (lazy_repeat (f x) f)))
       )
 
+
 (defn fun_power [x n]
       (list_foldleft 1 (take n (lazy_repeat x #(* % 1))) *)
       )
@@ -25,7 +52,6 @@
 (defn cube [x]
       (fun_power x 3)
       )
-
 
 (defn list_foldright [res xs f]
       (list_foldleft 0 (list_reverse xs) f)
@@ -76,16 +102,10 @@
       (list_foldleft2 0 xs ys (fn [res x y] (+ res (square (- x y)))))
       )
 
-(defn cube [x]
-      (fun_power x 3)
-      )
 
-(defn fact [n]
-      (letfn [(helper [n res]
-      	     (if (<= n 1) res (helper (- n 1) (* res n)))
-	     )]
-	     (helper n 1)
-	     ))
+
+;; streams and lazy evaluation ;;
+
 
 (defn streamize [xs]
       (lazy-seq (cons (first xs) (streamize (rest xs))))
@@ -156,17 +176,25 @@
 
 (def theNatsTriples (lazy-seq (concat (triangulars 0))))
 
-;; some prep for ramanujan number search
-
 (def theNatsPairsRmDup (filter (fn [x] (<= (first x) (second x))) theNatsPairs))
 
 (def SumCubes (map (fn [x] (+ (cube (first x)) (cube (second x)))) theNatsPairsRmDup))
+
+
+
+
+;; Powerset function ;;
 
 (defn combine [xs ys res]
     (if (empty? ys) res (concat (combine (cons (first ys) xs) (rest ys) '()) (combine xs (rest ys) (cons (cons (first ys) xs) res)) )))
 
 (defn getsubsets [xs]
     (cons '() (combine '() xs '())))
+
+
+
+
+;; Permutations function ;;
 
 
 (defn swap [xs i j]
@@ -194,7 +222,11 @@
 
 (def Perms (take 119 (nextPerm '(1 2 3 4 5))))
 
-;; merge sort
+
+
+
+
+;; merge sort ;;
 
 (defn msort [xs ys]
       (if (empty? ys) xs (if (empty? xs) ys
@@ -209,11 +241,3 @@
 
 (defn mergesort [xs]
       (split xs))
-
-;; ackermann's function
-
-(defn acker [x y]
-      (if (= x 0) (+ y 1)
-      	  (if (= y 0) (acker (- x 1) 1)
-	      (acker (- x 1) (acker x (- y 1)))
-	      )))
