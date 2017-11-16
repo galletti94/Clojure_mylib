@@ -108,22 +108,6 @@
       (lazy_map2 (lazy_rolling_sum xs) (lazy_rolling_length xs) /)
       )
 
-(defn lazy_merge [xs ys]
-      (if (empty? xs) (if (empty? ys) nil ys) (if (empty? ys) xs
-      (if (< (first xs) (first ys))
-      	  (lazy-seq (cons (first xs) (lazy_merge (rest xs) ys)))
-      	  (lazy-seq (cons (first ys) (lazy_merge xs (rest ys))))
-      	  ))))
-
-(defn lazy_split [xs]
-      (if (empty? xs) nil (if (empty? (rest xs)) (list (list (first xs))) (lazy-seq (cons (list (first xs) (second xs)) (lazy_split (rest (rest xs)))))))
-      )
-
-(defn lazy_mergesort [xs]
-      (if (empty? (drop 2 xs)) xs
-      (lazy_merge (lazy_split xs) (lazy_split (drop 2 xs))))
-      )
-
 (defn theNats [init]
       (lazy-seq (cons (+ init 1) (theNats (+ init 1))))
       )
@@ -201,3 +185,20 @@
                          (lazy-seq (cons (permutate xs pivot (- (list_length xs) 1)) (nextPerm (permutate xs pivot (- (list_length xs) 1)))))))
 
 (def Perms (take 119 (nextPerm '(1 2 3 4 5))))
+
+;; merge sort
+
+(defn msort [xs ys]
+      (if (empty? ys) xs (if (empty? xs) ys
+      (if (<= (first xs) (first ys))
+      	  (cons (first xs) (msort (rest xs) ys))
+      	  (cons (first ys) (msort xs (rest ys)))
+      	  ))))
+
+(defn split [xs]
+      (let [n (list_length xs)] (if (> n 2) (msort (split (take (quot n 2) xs)) (split (drop (quot n 2) xs)))
+      (msort (take 1 xs) (drop 1 xs)))))
+
+(defn mergesort [xs]
+      (split xs))
+
