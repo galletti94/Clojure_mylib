@@ -187,19 +187,17 @@
                       (drop j xs))
 )
 
-(defn permutate [xs pivot]
-    (if (< pivot (list_length xs))
-    (if (< (nth xs (- pivot 1)) (nth xs (+ pivot 1)))
-      (let [xss (swap xs (- pivot 1) (+ pivot 1))] (concat (take pivot xss) (list_reverse (drop pivot xss))))
-      (let [yss (swap xs (- pivot 1) pivot)] (concat (take pivot yss) (list_reverse (drop pivot yss))))
-    )
-    (swap xs (- pivot 1) pivot)
-    ))
+(defn permutate [xs p1 p2]
+      (if (> (nth xs (- p1 1)) (nth xs p2)) (permutate xs p1 (- p2 1))
+      (let [xss (swap xs p1 (+ p2 1))] (concat (take p1 xss) (list_reverse (drop p1 xss))))
+      ))
 
 (defn findPivot [xs]
-    (letfn [(helper [xs i] (if (= i 0) i (if (> (nth xs i) (nth xs (- i 1))) i (helper xs (- i 1)))))]
-           (helper xs (- (list_length xs) 1)))
+      (letfn [(helper [xs i] (if (= i 0) i (if (> (nth xs i) (nth xs (- i 1))) i (helper xs (- i 1)))))]
+             (helper xs (- (list_length xs) 1)))
 )
   
-(defn nextPerm [xs] (let [pivot (+ 1 (findPivot xs))]
-                         (permutate xs pivot)))
+(defn nextPerm [xs] (let [pivot (findPivot xs)]
+                         (lazy-seq (cons (permutate xs pivot (- (list_length xs) 1)) (nextPerm (permutate xs pivot (- (list_length xs) 1)))))))
+
+(def Perms (take 119 (nextPerm '(1 2 3 4 5))))
