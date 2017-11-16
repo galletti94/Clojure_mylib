@@ -29,22 +29,15 @@
 	 (is (= (nth (lazy_rolling_mean test_var) (- (list_length test_var) 1)) (list_mean test_var))
 	 )))
 
-(deftest merge
-      (testing "lazy_merge failed"
-      (is (list_equal (take 10 (lazy_merge test_var test_var)) '(1 1 2 2 3 3 4 4 5 5))
-      )))
-
-(deftest splitting
-	 (testing "lazy_split failed"
-	 (is (list_equal (take 1 (lazy_split test_var)) (list (list 1 2)) ))
-	 ))
-
+(deftest mergeSort
+      (testing "mergesort failed"
+      (is (list_equal (mergesort (list_reverse test_var)) test_var))
+      ))
 
 (deftest nats
 	 (testing "theNats failed"
 	 (is (list_equal (take 10 (theNats 0)) test_var))
 	 ))
-
 
 (deftest primes
 	 (testing "Sieve failed"
@@ -54,4 +47,14 @@
 (deftest cubeSum
 	 (testing "Cube Sum failed"
 	 (is (list_equal (take 10 SumCubes) '(0 1 8 2 27 9 64 28 16 125)))
+	 ))
+
+(deftest nextPermutation
+	 (testing "nextPerm failed"
+	 (is (list_equal (flatten (take 1 (nextPerm '(5 4 3 1 2)))) '(5 4 3 2 1)))
+	 ))
+
+(deftest powerset
+	 (testing "getsubsets failed"
+	 (is (= (list_length (getsubsets '(1 2 3 4 5 6 7 8 9 10))) (fun_power 2 10)))
 	 ))
