@@ -58,6 +58,14 @@
       (if (not (= (first xs) (first ys))) false (list_equal (rest xs) (rest ys)))
       ))
 
+(defn list_compare [xs ys f]
+      (if (and (empty? xs) (empty? ys)) true
+      	  (if (not (f (first xs) (first ys))) false (list_compare (rest xs) (rest ys) f)))
+	  )
+
+(defn list_list_equal [xss yss]
+     (list_compare xss yss list_equal)
+     )
 
 (defn list_foldleft2 [res xs ys f]
       (assert (= (list_length xs) (list_length ys)) "lists should be of same length")
@@ -202,3 +210,10 @@
 (defn mergesort [xs]
       (split xs))
 
+;; ackermann's function
+
+(defn acker [x y]
+      (if (= x 0) (+ y 1)
+      	  (if (= y 0) (acker (- x 1) 1)
+	      (acker (- x 1) (acker x (- y 1)))
+	      )))
